@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قسەخۆش AI - پەیوەندا دەنگی</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0d1117; color: #c9d1d9; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .container { text-align: center; background: #161b22; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 90%; max-width: 450px; border: 1px solid #30363d; }
+        h1 { color: #58a6ff; margin-bottom: 10px; font-size: 26px; }
+        p { color: #8b949e; margin-bottom: 30px; font-size: 14px; }
+        .call-visualizer { width: 120px; height: 120px; background: rgba(88, 166, 255, 0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 30px; position: relative; }
+        .call-visualizer.active::after { content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 2px solid #58a6ff; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
+        .mic-icon { font-size: 40px; color: #58a6ff; }
+        .status { font-weight: bold; margin-bottom: 20px; font-size: 16px; color: #f0f6fc; }
+        .btn-container { display: flex; gap: 15px; justify-content: center; }
+        button { padding: 12px 25px; border: none; border-radius: 50px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        #startBtn { background-color: #238636; color: white; }
+        #startBtn:hover { background-color: #2ea043; }
+        #endBtn { background-color: #da3633; color: white; display: none; }
+        #endBtn:hover { background-color: #f85149; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>قسەخۆش AI</h1>
+        <p>پەیوەندا دەنگی یا ڕاستەوخۆ دگەل زیرەکییا چەکداری یا کۆمێدی و زیرەک</p>
+        
+        <div class="call-visualizer" id="visualizer">
+            <span class="mic-icon" id="micSymbol">🎙️</span>
+        </div>
+
+        <div class="status" id="statusText">تەلفۆن بەرهەڤە بۆ په‌یوه‌ندیێ</div>
+
+        <div class="btn-container">
+            <button id="startBtn" onclick="startCall()">دەستپێکرنا په‌یوه‌ندیێ (Call)</button>
+            <button id="endBtn" onclick="endCall()">داخستن (Hang up)</button>
+        </div>
+    </div>
+
+    <script>
+        let isCalling = false;
+        const statusText = document.getElementById('statusText');
+        const startBtn = document.getElementById('startBtn');
+        const endBtn = document.getElementById('endBtn');
+        const visualizer = document.getElementById('visualizer');
+        const micSymbol = document.getElementById('micSymbol');
+
+        const sarcasticResponses = [
+            "ها ڕۆلێ من! تە زوو گازى من کر، خێرە قەرز ل تە هەنە؟ بێژە چەکێ خوە دڤێت!",
+            "ئەڤە تو گۆتی پسیارەکا زیرەک کە، بەلێ مخابن مەژیێ من نوکا خەوا نیڤرۆیە!",
+            "ئەو چ پرسیارە تو دکەی؟ وەک ئەوەی تە بخوازێت موشەکەکێ فرێکەی بۆ مەریخێ!",
+            "بێژە برا، دەنگێ تە وەکی یێ کەڤنەپەرستێن شارەکێ دوور دهێت، چ خبر هەنە؟"
+        ];
+
+        function startCall() {
+            isCalling = true;
+            statusText.innerText = "پەیوەندی هاتە کرن... (گوێدارم ل تە مە)";
+            startBtn.style.display = 'none';
+            endBtn.style.display = 'inline-block';
+            visualizer.classList.add('active');
+            micSymbol.innerText = "🗣️";
+
+            // لێرە دەنگێ سەرەتایی یان پێشوازیێ دکەتە دەنگ (Text-to-Speech)
+            speakText("سلاڤ مژول! من گوهـ ل تە مە، بێژە چ دڤێت؟");
+        }
+
+        function endCall() {
+            isCalling = false;
+            statusText.innerText = "پەیوەندی هاتە داخستن.";
+            startBtn.style.display = 'inline-block';
+            endBtn.style.display = 'none';
+            visualizer.classList.remove('active');
+            micSymbol.innerText = "🎙️";
+            window.speechSynthesis.cancel();
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'ar-SA'; // یان زمانەکێ گونجایی
+                utterance.rate = 1.0;
+                utterance.pitch = 1.1; // دەنگەکێ هندەک زارۆکانە و کۆمێدی
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+    </script>
+</body>
+</html>
